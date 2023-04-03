@@ -31,7 +31,7 @@ def c(text):
 def python(text='is cool'):
     if '_' in text:
         text = text.replace('_', ' ')
- 
+
     return f'Python {text}'
 
 
