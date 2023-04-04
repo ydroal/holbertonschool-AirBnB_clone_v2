@@ -1,7 +1,9 @@
 #!/usr/bin/python3
 """This module defines a class to manage DBstorage for hbnb clone"""
 
-from sqlalchemy import create_engine, MetaData
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import scoped_session
 import os
 
 
@@ -21,9 +23,9 @@ class DBStorage():
                                               os.getenv('HBNB_MYSQL_DB'),
                                               pool_pre_ping=True))
         
-        # if os.getenv('HBNB_ENV') == 'test':
-            # from models.base_model import Base
-            # Base.metadata.drop_all()
+        if os.getenv('HBNB_ENV') == 'test':
+            from models.base_model import Base
+            Base.metadata.drop_all()
 
     def all(self, cls=None):
         """Returns the list of objects of one type of class"""
@@ -47,9 +49,6 @@ class DBStorage():
             for obj in objs.all():
                 key = '{}.{}'.format(cls.__name__, obj.id)
                 res[key] = obj
-
-        query = self.__session.execute("SELECT COUNT(*) FROM states")
-        print(query.fetchone()[0])
 
         return res    
     
@@ -79,17 +78,11 @@ class DBStorage():
         from models.review import Review
         from models.user import User
         from models.state import State
-        from sqlalchemy.orm import sessionmaker, scoped_session
-
-        if os.getenv('HBNB_ENV') == 'test':
-            from models.base_model import Base
-            Base.metadata.drop_all()
-
         Base.metadata.create_all(self.__engine)
         session_factory = sessionmaker(bind=self.__engine,
                                        expire_on_commit=False)
         Session = scoped_session(session_factory)
-        self.__session = Session
+        self.__session = Session()
 
     def close(self):
         '''Close a session'''

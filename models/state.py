@@ -16,7 +16,7 @@ class State(BaseModel, Base):
     name = Column(String(128), nullable=False)
     if os.getenv('HBNB_TYPE_STORAGE') == 'db':
         # have cities attribute
-        cities = relationship('City', back_populates='state', cascade='all, delete')
+        cities = relationship('City', backref='state', cascade='all, delete')
     
     # for fileStorage
     else:
