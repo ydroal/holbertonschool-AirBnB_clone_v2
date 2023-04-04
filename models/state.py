@@ -35,5 +35,3 @@ class State(BaseModel, Base):
             'updated_at': self.updated_at,
             'created_at': self.created_at
         })
-
-
